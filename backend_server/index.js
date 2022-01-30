@@ -2,6 +2,9 @@ const express = require('express')
 const app= express();
 app.use(express.json())
 const PORT = 5000;
+const cors = require('cors');
+app.use(cors());
+
 const mongoose = require('mongoose')
 // const {MONGOURI} =require('./keys')
 require('dotenv').config();

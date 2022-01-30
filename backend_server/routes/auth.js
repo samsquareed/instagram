@@ -22,12 +22,12 @@ router.post('/signup', (req,res)=>{
     // console.log(req.body.name);
     const { name, email, password} = req.body
     if(!email || !name || !password)
-        return res.status(422).json({error : "Please provide all the credentials"})
+        return res.json({error : "Please provide all the credentials"})
     // res.json({message : "successfully registered"})
     User.findOne({email : email})
     .then((savedUser)=>{
         if(savedUser)
-            return res.status(409).json({error : "user already present"})
+            return res.json({error : "user already present"})
         
         bcrypt.hash(password, 10)
         .then(hashedPassword =>{
