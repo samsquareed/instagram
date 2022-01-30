@@ -15,8 +15,9 @@ mongoose.connection.on('error', ()=>{
 })
 
 require('./models/user')
+require('./models/post')
 app.use(require('./routes/auth'))
-
+app.use(require('./routes/post'))
 
 app.listen(PORT, ()=>{
     console.log(`server started on port ${PORT}`);

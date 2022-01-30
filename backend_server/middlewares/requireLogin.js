@@ -28,7 +28,8 @@ module.exports = (req,res,next) =>{
             }
             */
             req.user = userData
+            next()
         })
-        next()
+        
     })
 }
