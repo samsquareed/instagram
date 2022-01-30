@@ -3,7 +3,9 @@ const app= express();
 app.use(express.json())
 const PORT = 5000;
 const mongoose = require('mongoose')
-const {MONGOURI} =require('./keys')
+// const {MONGOURI} =require('./keys')
+require('dotenv').config();
+const MONGOURI = process.env.MONGOURI;
 
 mongoose.connect(MONGOURI);
 mongoose.connection.on('connected', ()=>{
