@@ -4,9 +4,6 @@ app.use(express.json())
 const PORT = 5000;
 const mongoose = require('mongoose')
 const {MONGOURI} =require('./keys')
-require('./models/user')
-app.use(require('./routes/auth'))
-
 
 mongoose.connect(MONGOURI);
 mongoose.connection.on('connected', ()=>{
@@ -16,6 +13,10 @@ mongoose.connection.on('connected', ()=>{
 mongoose.connection.on('error', ()=>{
     console.log("error in connecting");
 })
+
+require('./models/user')
+app.use(require('./routes/auth'))
+
 
 app.listen(PORT, ()=>{
     console.log(`server started on port ${PORT}`);
