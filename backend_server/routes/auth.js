@@ -38,7 +38,7 @@ router.post('/signup', (req,res)=>{
             })
             user.save()
             .then(user=>{
-                return res.status(201).json({message : "Registered successfully"})
+                return res.status(201).json({message : "Registered successfully now you can Login"})
             })
             .catch((err) =>{
                 console.log(err)
@@ -49,21 +49,30 @@ router.post('/signup', (req,res)=>{
 
 router.post('/signin',(req,res)=>{
     const { email, password} = req.body;
-    if(!email || !password)
-        return res.status(422).json({error : "email or password is missing"})
+    if(!email || !password){
+        // return res.status(422).json({error : "email or password is missing"})
+        return res.json({error : "email or password is missing"})
+    }
+        
     User.findOne({email : email})
     .then(savedUser=>{
-        if(!savedUser)
-            return res.status(422).json({error : "user not found"})
+        if(!savedUser){
+            // return res.status(422).json({error : "user not found"})
+            return res.json({error : "user not found"})
+        }
         bcrypt.compare(password,savedUser.password)
         .then(matched=>{
             if(matched){
                 // return res.status(200).json({message : "signed successfully"})
                 const token = jwt.sign({_id : savedUser._id}, JWT_SECRET);
-                res.json({token}); 
+                const {_id, name, email} = savedUser;
+                res.json({token, user :{_id, name, email}}); 
             }
-            else
-                res.status(422).json({error : "Invalid credentials"})
+            else{
+                // res.status(422).json({error : "Invalid credentials"})
+                res.json({error : "Invalid credentials"})
+            }
+                
         })
         .catch(err=>console.log(err))
     })
