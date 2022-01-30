@@ -3,6 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose')
 const User = mongoose.model("User")
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const {JWT_SECRET} =require('../keys')
 
 router.get('/', (req,res)=>{
     res.send("Home page")
@@ -47,8 +49,11 @@ router.post('/signin',(req,res)=>{
             return res.status(422).json({error : "user not found"})
         bcrypt.compare(password,savedUser.password)
         .then(matched=>{
-            if(matched)
-                return res.status(200).json({message : "signed successfully"})
+            if(matched){
+                // return res.status(200).json({message : "signed successfully"})
+                const token = jwt.sign({_id : savedUser._id}, JWT_SECRET);
+                res.json({token}); 
+            }
             else
                 res.status(422).json({error : "Invalid credentials"})
         })
