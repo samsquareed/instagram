@@ -7,17 +7,27 @@ import Login from "./components/screens/Login"
 import Signup from "./components/screens/Signup"
 import Profile from "./components/screens/Profile"
 import CreatePost from "./components/screens/CreatePost"
-import { createContext, useReducer } from 'react';
+import { createContext, useEffect, useReducer, useContext } from 'react';
 
 import {initialstate, reducer} from './reducers/userReducer'
 
-const UserContext = createContext();
+export const UserContext = createContext();
 
 const Routing = ()=>{
-
-
     const nevigate = useNavigate();
 
+    const {state, dispatch} = useContext(UserContext)
+
+    useEffect(()=>{
+        const user = JSON.parse(localStorage.getItem("user"))
+        if(user){
+            dispatch({type:"USER", payload : user})
+            nevigate('/')
+        } else{
+            nevigate('/login')
+        }
+    },[])
+    
     return(
         <Routes>
             <Route exact path="/" element={<Home />} />

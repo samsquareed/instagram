@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom'
 import M from 'materialize-css'
 import Axios from 'axios'
+import {UserContext} from '../../App'
 
 const Login = () =>{
-
+    const {state, dispatch} = useContext(UserContext)
     const nevigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -24,6 +25,7 @@ const Login = () =>{
                 console.log(response);
                 localStorage.setItem("jwt", response.data.token)
                 localStorage.setItem("user", JSON.stringify(response.data.user))
+                dispatch({type:"USER", payload : response.data.user})
                 M.toast({html: "login successful", classes:"#43a047 green darken-1"})
                 nevigate('/');
             } else if(response.data.error) {
