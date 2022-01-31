@@ -20,14 +20,16 @@ router.get('/allposts', (req,res)=>{
     }).catch(err=>console.log(err))
 })
 
-router.post('/createpost', requireLogin, (req,res)=>{
-    const {title,body} = req.body
-    if(!title || !body)
-        return res.status(422).json({error : "Please fill all the fields"});
-
+router.post('/createpost',  (req,res)=>{
+    const {title,caption, pic} = req.body
+    if(!title || !caption || !pic){
+        // return res.status(422).json({error : "Please fill all the fields"});
+        return res.json({error : "Please fill all the fields"});
+    }
     const post = new Post({
         title,
-        body,
+        body : caption,
+        photo : pic,
         postedBy : req.user
         //this req.user is comming from requireLogin middleware
     })
