@@ -9,6 +9,7 @@ const Navbar = ()=>{
     const renderList = ()=>{
         if(state){
             return [
+                <li key="0"><Link to="/profile"> {state.name} </Link></li>,
                 <li key="1"><Link to="/profile">Profile</Link></li>,
                 <li key="2"><Link to="/createpost">New Post</Link></li>,
                 <li  key="5" className='logoutbtn'>

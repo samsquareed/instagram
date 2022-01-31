@@ -6,7 +6,11 @@ import Axios from 'axios'
 const Home = () =>{
 
     const [data, setData] = useState([]);
+    const [userComments, setuserComments] = useState([]);
     const {state,dispatch} = useContext(UserContext)
+
+    const [comment, setComment] = useState("");
+
     useEffect(()=>{
         const authAxios = Axios.create({
             baseURL : 'http://localhost:3001',
@@ -16,7 +20,7 @@ const Home = () =>{
         });
         authAxios.get('/allposts')
         .then(response=>{
-            console.log(response.data.posts);
+            // console.log(response.data.posts);
             setData(response.data.posts);
             // console.log(data);
         })
@@ -68,6 +72,33 @@ const Home = () =>{
         }).catch(err=>console.log(err))
     }
 
+    const handleComment = (text,id)=>{
+        // console.log(comment);
+        // console.log(text, id);
+        const authAxios = Axios.create({
+            baseURL : 'http://localhost:3001',
+            headers :{
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            }
+        });
+        authAxios.put('/comment',{
+            text : text,
+            postedBy : id
+        }).then(response=>{
+            console.log(response.data.comments);
+            setuserComments(response.data.comments);
+            // const newData = data.map(item=>{
+            //     if(item._id == response.data._id){
+            //         return response.data
+            //     }else{
+            //         return item
+            //     }
+            // })
+            // setData(newData)
+            // console.log(data);
+        })
+    }
+
     return(
         <div className="home">
             {
@@ -95,7 +126,19 @@ const Home = () =>{
                                 <h6> {item.likes.length} likes </h6>
                                 <h6>{item.title}</h6>
                                 <p> {item.caption} </p>
-                                <input type="text" placeholder='Leave a comment' />
+                                {
+                                    userComments.map(record=>{
+                                        return(
+                                            <h6> <span style={{fontWeight:"500"}}>{record.postedBy.name}</span> {record.text} </h6>
+                                        )
+                                    })
+                                }
+                                <form onSubmit={(e)=>{
+                                    e.preventDefault()
+                                    handleComment(e.target[0].value,item._id)
+                                }}>
+                                  <input type="text" placeholder="Leave a comment" />  
+                                </form>
                             </div>
                         </div>
                     )
