@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken')
 // const {JWT_SECRET} =require('../keys')
 const requireLogin = require('../middlewares/requireLogin')
 require('dotenv').config();
-
 const JWT_SECRET = process.env.JWT_SECRET;
 
 router.get('/', (req,res)=>{
@@ -64,7 +63,7 @@ router.post('/signin',(req,res)=>{
         .then(matched=>{
             if(matched){
                 // return res.status(200).json({message : "signed successfully"})
-                const token = jwt.sign({_id : savedUser._id}, JWT_SECRET);
+                const token = jwt.sign({email : savedUser.email}, JWT_SECRET);
                 const {_id, name, email} = savedUser;
                 res.json({token, user :{_id, name, email}}); 
             }

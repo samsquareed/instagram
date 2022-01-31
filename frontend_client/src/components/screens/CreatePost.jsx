@@ -12,17 +12,28 @@ const CreatePost = () =>{
     const [image,setImage] = useState("")
     const [url,setUrl] = useState("")
 
+    // Axios.interceptors.request.use(
+    //     config => {
+    //         config.headers.Authorization = `Bearer ${localStorage.getItem("jwt")}`;
+    //         return config;
+    //     },
+    //     error =>Promise.reject(error)
+    // );
+
     useEffect(()=>{
         if(url){
-            var headers = {
-                'Content-Type': 'application/json',
-                "authorization" : "Bearer "+localStorage.getItem("jwt") 
+            // console.log(localStorage.getItem("jwt"));
+        const authAxios = Axios.create({
+            baseURL : 'http://localhost:3001',
+            headers :{
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
             }
-        Axios.post('http://localhost:5000/createpost',{
+        })    
+        authAxios.post('/createpost', {
            title,
            caption,
            pic : url
-       },{"headers" : headers})
+       })
        .then(response=>{
            if(response.data.error){
                M.toast({html: response.data.error,classes:"#c62828 red darken-3"})
@@ -35,6 +46,35 @@ const CreatePost = () =>{
 
         }
     },[url])
+
+    // useEffect(()=>{
+    //    if(url){
+    //     fetch("http://localhost:6000/createpost",{
+    //         method:"post",
+    //         headers:{
+    //             "Content-Type":"application/json",
+    //             "Authorization":"Bearer "+localStorage.getItem("jwt")
+    //         },
+    //         body:JSON.stringify({
+    //             title,
+    //             caption,
+    //             pic:url
+    //         })
+    //     }).then(res=>res.json())
+    //     .then(data=>{
+    
+    //        if(data.error){
+    //           M.toast({html: data.error,classes:"#c62828 red darken-3"})
+    //        }
+    //        else{
+    //            M.toast({html:"Created post Successfully",classes:"#43a047 green darken-1"})
+    //            nevigate('/')
+    //        }
+    //     }).catch(err=>{
+    //         console.log(err)
+    //     })
+    // }
+    // },[url])
 
 
     const ImagePost = ()=>{

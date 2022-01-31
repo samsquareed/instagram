@@ -17,7 +17,7 @@ const Signup = () =>{
             return
         }
         // console.log(name, email, password);
-        Axios.post('http://localhost:5000/signup',{name,email,password})
+        Axios.post('http://localhost:3001/signup',{name,email,password})
         .then(response=> {
             // console.log(response)
             if(response.data.message){
