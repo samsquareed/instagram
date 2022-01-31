@@ -28,6 +28,8 @@ const Home = () =>{
 
 
     const LikePost = (id)=>{
+        //this id corresponds to Id of logged in user
+        // console.log(id);
         const authAxios = Axios.create({
             baseURL : 'http://localhost:3001',
             headers :{
@@ -45,11 +47,14 @@ const Home = () =>{
                     return item
                 }
             })
+            //this is bcx after liking the pic, the data changes na, hence we are just updating that May be?
             setData(newData)
         }).catch(err=>console.log(err))
     }
 
      const UnLikePost = (id)=>{
+         //this id corresponds to Id of logged in user
+        //  console.log(id);
         const authAxios = Axios.create({
             baseURL : 'http://localhost:3001',
             headers :{
@@ -85,16 +90,18 @@ const Home = () =>{
             text : text,
             postedBy : id
         }).then(response=>{
-            console.log(response.data.comments);
-            setuserComments(response.data.comments);
-            // const newData = data.map(item=>{
-            //     if(item._id == response.data._id){
-            //         return response.data
-            //     }else{
-            //         return item
-            //     }
-            // })
-            // setData(newData)
+            // console.log("response.data._id : "+response.data._id);
+            // setuserComments(response.data.comments);
+            const newData = data.map(item=>{
+                if(item._id == response.data._id){
+                    // console.log("item._id : "+ item._id);
+                    // console.log(response.data);
+                    return response.data
+                }else{
+                    return item
+                }
+            })
+            setData(newData)
             // console.log(data);
         })
     }
@@ -127,9 +134,9 @@ const Home = () =>{
                                 <h6>{item.title}</h6>
                                 <p> {item.caption} </p>
                                 {
-                                    userComments.map(record=>{
+                                    item.comments.map((record,id)=>{
                                         return(
-                                            <h6> <span style={{fontWeight:"500"}}>{record.postedBy.name}</span> {record.text} </h6>
+                                            <h6 key={id}> <span style={{fontWeight:"500"}}>{record.postedBy.name}</span> {record.text} </h6>
                                         )
                                     })
                                 }

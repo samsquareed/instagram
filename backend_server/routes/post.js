@@ -44,6 +44,7 @@ router.post('/createpost', requireLogin,  (req,res)=>{
 
 router.put('/like', requireLogin, (req,res)=>{
     // console.log(req.body.postId);
+    // console.log(req.user._id);
     Post.findByIdAndUpdate(req.body.postId,{
         $push : {likes : req.user._id}
     },{
