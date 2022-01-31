@@ -1,6 +1,27 @@
+import { useEffect, useState, useContext } from 'react';
 import img from '../assets/images/deekshi.jpg'
+import Axios from 'axios'
+import {UserContext} from '../../App'
 
 const Profile = () =>{
+
+    const [myData, setMyData] = useState([]);
+    const {state, dispatch} = useContext(UserContext)
+
+    useEffect(()=>{
+        const authAxios = Axios.create({
+            baseURL : 'http://localhost:3001',
+            headers : {
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            }
+        });
+        authAxios.get('/myposts')
+        .then(response=>{
+            // console.log(response.data.mypost);
+            setMyData(response.data.mypost);
+        })
+    },[])
+
     return(
         <div style={{maxWidth:"550px",margin:"0px auto"}}>
             <div style={{
@@ -15,7 +36,7 @@ const Profile = () =>{
                 />
             </div>
             <div>
-                <h4> Deeskhu </h4>
+                <h4> {state? state.name : "Loading ..."} </h4>
                 <div style={{display:"flex",justifyContent:"space-between",width:"108%"}}>
                     <h6>24 posts</h6>
                     <h6> 208 followers</h6>
@@ -24,12 +45,13 @@ const Profile = () =>{
             </div>
             </div>
              <div className="gallery">
-               <img src={img} className="item" />
-               <img src={img} className="item" />
-               <img src={img} className="item" />
-               <img src={img} className="item" />
-               <img src={img} className="item" />
-               <img src={img} className="item" />
+               {
+                   myData?.map((pics)=>{
+                       return(
+                           <img src={pics.photo} className="item" key={pics._id} alt={pics.title} />
+                       )
+                   })
+               }
            </div>
         </div>
     )

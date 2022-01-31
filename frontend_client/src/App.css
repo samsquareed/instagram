@@ -61,3 +61,7 @@ h3{
 .material-icons:hover{
   cursor: pointer;
 }
+
+.logoutbtn{
+  padding-right: 1.7rem !important;
+}

@@ -12,10 +12,10 @@ const Home = () =>{
                 Authorization : `Bearer ${localStorage.getItem("jwt")}`
             }
         });
-        authAxios.get('/myposts')
+        authAxios.get('/allposts')
         .then(response=>{
             // console.log(response.data.mypost);
-            setData(response.data.mypost);
+            setData(response.data.posts);
             // console.log(data);
         })
     },[])
