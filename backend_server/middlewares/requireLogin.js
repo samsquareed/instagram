@@ -8,16 +8,19 @@ const mongoose = require('mongoose')
 const User = mongoose.model("User")
 
 module.exports = (req,res,next) =>{
-    console.log(req.headers);
+    // console.log(req.headers);
 
     const {authorization} = req.headers;
     if(!authorization)
         res.status(401).json({error:"You must be logged in!"})
-    console.log(authorization.replace("Bearer ",""))
+    // console.log(authorization.replace("Bearer ",""))
     const token = authorization.replace("Bearer ","");
+    // console.log("login success");
+    // console.log(token);
     jwt.verify(token,JWT_SECRET,(err, payload)=>{
         if(err)
             res.json({error : "Login failed"})
+        // console.log(payload);
         // console.log(payload); it looks something like this : { _id: '61f6593efa9af3b36f84151e', iat: 1643540492 }
         //then we destructure _id from the payload and search that in database and 
         //database returned the entire details about that user id = _id

@@ -1,21 +1,32 @@
 import React, {useContext} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { UserContext } from '../App'
 
 const Navbar = ()=>{
 
     const {state, dispatch} = useContext(UserContext)
-    
+    const nevigate = useNavigate();
     const renderList = ()=>{
         if(state){
             return [
-                <li><Link to="/profile">Profile</Link></li>,
-                <li><Link to="/createpost">New Post</Link></li>
+                <li key="1"><Link to="/profile">Profile</Link></li>,
+                <li key="2"><Link to="/createpost">New Post</Link></li>,
+                <li  key="5">
+                    <button className="btn #c62828 red darken-3"
+                        onClick={()=>{
+                        localStorage.clear()
+                        dispatch({type:"CLEAR"})
+                        nevigate('/login')
+                        }}
+                    >
+                        Logout
+                    </button>
+                </li>
             ]
         } else{
             return [
-                <li><Link to="/login">Login</Link></li>,
-                <li><Link to="/signup">Sign up</Link></li>
+                <li key="1"><Link to="/login">Login</Link></li>,
+                <li key="2"><Link to="/signup">Sign up</Link></li>
             ]
         }
     }

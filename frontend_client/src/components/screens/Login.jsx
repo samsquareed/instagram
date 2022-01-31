@@ -22,7 +22,7 @@ const Login = () =>{
             password
         }).then(response=>{
             if(response.data.token){
-                console.log(response);
+                // console.log(response);
                 localStorage.setItem("jwt", response.data.token)
                 localStorage.setItem("user", JSON.stringify(response.data.user))
                 dispatch({type:"USER", payload : response.data.user})
