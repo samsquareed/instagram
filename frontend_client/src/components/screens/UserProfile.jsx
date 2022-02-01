@@ -26,13 +26,49 @@ const UserProfile = () =>{
                 name : response.data.user.name,
                 email : response.data.user.email,
                 posts : response.data.posts.length,
-                images : response.data.posts
+                images : response.data.posts,
+                followers : response.data.user.followers.length,
+                following : response.data.user.following.length
             }
             setUserProfile(userData)
             // console.log(userProfile);
             // setMyData(response.data.mypost);
         })
     },[])
+
+
+    const handleFollow = async() =>{
+        const authAxios = await Axios.create({
+            baseURL : 'http://localhost:3001',
+            headers : {
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            }
+        });
+        authAxios.put('/follow',{
+            followId : userid
+        }).then(response=>{
+            console.log(response);
+            dispatch({type : "UPDATE", payload : {
+                followers : response.data.followers,
+                following : response.data.following
+            }})
+            localStorage.setItem("user", JSON.stringify(response.data))
+        })
+    }
+
+    const handleUnFollow = async() =>{
+        const authAxios = await Axios.create({
+            baseURL : 'http://localhost:3001',
+            headers : {
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            }
+        });
+        authAxios.put('/unfollow',{
+            unfollowId : userid
+        }).then(response=>{
+            console.log(response);
+        })
+    }
 
     return(
         <>
@@ -56,9 +92,17 @@ const UserProfile = () =>{
                 <h5>{userProfile.email}</h5>
                 <div style={{display:"flex",justifyContent:"space-between",width:"108%"}}>
                     <h6>{userProfile.posts} posts</h6>
-                    <h6> 0 followers</h6>
-                    <h6>0 following</h6>
+                    <h6>{userProfile.followers} followers</h6>
+                    <h6>{userProfile.following} following</h6>
                 </div>
+                <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
+                    onClick={handleFollow}
+                >
+                    follow
+                </button>
+                <button className="btn waves-effect waves-light #64b5f6 blue darken-1">
+                    unfollow
+                </button>
             </div>
             </div>
              <div className="gallery">
