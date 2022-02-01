@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import img from '../assets/images/deekshi.jpg'
+import img from '../assets/images/sam.jpg'
 import Axios from 'axios'
 import {UserContext} from '../../App'
 
