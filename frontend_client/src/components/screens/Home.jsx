@@ -109,7 +109,7 @@ const Home = () =>{
 
 
     const handleDelete = (postId)=>{
-        console.log(postId);
+        // console.log(postId);
         const authAxios = Axios.create({
             baseURL : 'http://localhost:3001',
             headers :{
@@ -118,9 +118,16 @@ const Home = () =>{
         });
         authAxios.delete(`/delete/${postId}`)
         .then(response=>{
-            if(response.data.message){
+            // console.log(response.data);
+            if(response.data){
                 M.toast({html:"Deleted post Successfully",classes:"#43a047 green darken-1"})
             }
+            const updatedData = data.filter(item=>{
+                return item._id !=response.data._id;
+            })
+            // here have to check what allposts route is returning so that same type of
+            //data needs to be set after the delete
+            setData(updatedData)
         })
 
     }

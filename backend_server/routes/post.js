@@ -105,6 +105,8 @@ router.put('/comment', requireLogin,(req,res)=>{
 
 router.delete('/delete/:postId', requireLogin, (req,res)=>{
     console.log(req.params.postId);
+    // we are accessing via params bcz delete rount won't accept any body from client.
+    // i am just assuming
     Post.findOne({_id : req.params.postId})
     .populate("postedBy", "_id")
     .exec((err,post)=>{
@@ -114,7 +116,7 @@ router.delete('/delete/:postId', requireLogin, (req,res)=>{
         if(post.postedBy._id.toString() === req.user._id.toString()){
             post.remove()
             .then(result=>{
-                res.json({message : "successfully deleted"})
+                res.json(result)
             }).catch(err=>{
                 console.log(err);
             })
