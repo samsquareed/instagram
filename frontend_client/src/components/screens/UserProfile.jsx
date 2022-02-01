@@ -2,28 +2,43 @@ import { useEffect, useState, useContext } from 'react';
 import img from '../assets/images/deekshi.jpg'
 import Axios from 'axios'
 import {UserContext} from '../../App'
+import {useParams} from 'react-router-dom'
 
-const Profile = () =>{
+const UserProfile = () =>{
 
-    const [myData, setMyData] = useState([]);
+    const [userProfile, setUserProfile] = useState(null);
     const {state, dispatch} = useContext(UserContext)
 
-    useEffect(()=>{
-        const authAxios = Axios.create({
+    const {userid} = useParams()
+    // console.log(userid);
+
+    useEffect( async ()=>{
+        const authAxios = await Axios.create({
             baseURL : 'http://localhost:3001',
             headers : {
                 Authorization : `Bearer ${localStorage.getItem("jwt")}`
             }
         });
-        authAxios.get(`/user/${1234}`)
+        authAxios.get(`/user/${userid}`)
         .then(response=>{
-            // console.log(response.data.mypost);
-            setMyData(response.data.mypost);
+            console.log(response);
+            const userData = {
+                name : response.data.user.name,
+                email : response.data.user.email,
+                posts : response.data.posts.length,
+                images : response.data.posts
+            }
+            setUserProfile(userData)
+            // console.log(userProfile);
+            // setMyData(response.data.mypost);
         })
     },[])
 
     return(
-        <div style={{maxWidth:"550px",margin:"0px auto"}}>
+        <>
+        {userProfile ?
+
+            <div style={{maxWidth:"550px",margin:"0px auto"}}>
             <div style={{
                display:"flex",
                justifyContent:"space-around",
@@ -36,17 +51,19 @@ const Profile = () =>{
                 />
             </div>
             <div>
-                <h4> {state? state.name : "Loading ..."} </h4>
+                {/* <h4>{state? state.name : "Loading ..."}</h4> */}
+                <h4> {userProfile.name} </h4>
+                <h5>{userProfile.email}</h5>
                 <div style={{display:"flex",justifyContent:"space-between",width:"108%"}}>
-                    <h6>24 posts</h6>
-                    <h6> 208 followers</h6>
-                    <h6>311 following</h6>
+                    <h6>{userProfile.posts} posts</h6>
+                    <h6> 0 followers</h6>
+                    <h6>0 following</h6>
                 </div>
             </div>
             </div>
              <div className="gallery">
                {
-                   myData?.map((pics)=>{
+                   userProfile.images?.map((pics)=>{
                        return(
                            <img src={pics.photo} className="item" key={pics._id} alt={pics.title} />
                        )
@@ -54,7 +71,11 @@ const Profile = () =>{
                }
            </div>
         </div>
+        
+        
+        : <h3> Loading ...</h3>}
+        </>
     )
 }
 
-export default Profile;
+export default UserProfile;

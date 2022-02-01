@@ -10,6 +10,7 @@ import CreatePost from "./components/screens/CreatePost"
 import { createContext, useEffect, useReducer, useContext } from 'react';
 
 import {initialstate, reducer} from './reducers/userReducer'
+import UserProfile from './components/screens/UserProfile';
 
 export const UserContext = createContext();
 
@@ -33,8 +34,9 @@ const Routing = ()=>{
             <Route exact path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route exact path="/profile" element={<Profile />} />
             <Route path="/createpost" element={<CreatePost />} />
+            <Route path="/profile/:userid" element={<UserProfile />} />
         </Routes>
     )
 }
