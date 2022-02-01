@@ -15,9 +15,9 @@ const Profile = () =>{
                 Authorization : `Bearer ${localStorage.getItem("jwt")}`
             }
         });
-        authAxios.get(`/user/${1234}`)
+        authAxios.get('/myposts')
         .then(response=>{
-            // console.log(response.data.mypost);
+            // console.log(response.data);
             setMyData(response.data.mypost);
         })
     },[])
@@ -38,9 +38,9 @@ const Profile = () =>{
             <div>
                 <h4> {state? state.name : "Loading ..."} </h4>
                 <div style={{display:"flex",justifyContent:"space-between",width:"108%"}}>
-                    <h6>24 posts</h6>
-                    <h6> 208 followers</h6>
-                    <h6>311 following</h6>
+                    <h6>{myData.length} posts</h6>
+                    <h6> {state?state.followers.length:"0"} followers</h6>
+                    <h6>{state?state.following.length:"0"} following</h6>
                 </div>
             </div>
             </div>
