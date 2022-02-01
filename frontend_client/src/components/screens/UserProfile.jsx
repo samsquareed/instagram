@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom'
 
 const UserProfile = () =>{
 
+    const [showFollow, setShowFollow] = useState(true)
     const [userProfile, setUserProfile] = useState(null);
     const {state, dispatch} = useContext(UserContext)
 
@@ -21,7 +22,7 @@ const UserProfile = () =>{
         });
         authAxios.get(`/user/${userid}`)
         .then(response=>{
-            console.log(response);
+            // console.log(response);
             const userData = {
                 name : response.data.user.name,
                 email : response.data.user.email,
@@ -38,6 +39,7 @@ const UserProfile = () =>{
 
 
     const handleFollow = async() =>{
+        
         const authAxios = await Axios.create({
             baseURL : 'http://localhost:3001',
             headers : {
@@ -47,7 +49,7 @@ const UserProfile = () =>{
         authAxios.put('/follow',{
             followId : userid
         }).then(response=>{
-            console.log(response);
+            // console.log(response);
             dispatch({type : "UPDATE", payload : {
                 followers : response.data.followers,
                 following : response.data.following
@@ -59,8 +61,10 @@ const UserProfile = () =>{
                    followers : [...prevState.followers, response.data._id]
                 }
             })
+            setShowFollow(false)
         })
     }
+
 
     const handleUnFollow = async() =>{
         const authAxios = await Axios.create({
@@ -72,7 +76,20 @@ const UserProfile = () =>{
         authAxios.put('/unfollow',{
             unfollowId : userid
         }).then(response=>{
-            console.log(response);
+            // console.log(response);
+            dispatch({type : "UPDATE", payload : {
+                followers : response.data.followers,
+                following : response.data.following
+            }})
+            localStorage.setItem("user", JSON.stringify(response.data))
+            
+            setUserProfile((prevState)=>{
+                const newList = prevState.followers.filter(item=> item !=response.data._id)
+                return{
+                    ...prevState,
+                   followers : newList
+                }
+            })
         })
     }
 
@@ -101,14 +118,23 @@ const UserProfile = () =>{
                     <h6>{userProfile.followers.length} followers</h6>
                     <h6>{userProfile.following.length} following</h6>
                 </div>
-                <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
+
+                {
+                    showFollow ? 
+                    <button style={{margin : "10px"}} className="btn waves-effect waves-light #64b5f6 blue darken-1"
                     onClick={handleFollow}
                 >
                     follow
                 </button>
-                <button className="btn waves-effect waves-light #64b5f6 blue darken-1">
+                :
+                <button style={{margin : "10px"}} className="btn waves-effect waves-light #64b5f6 blue darken-1"
+                    onClick={handleUnFollow}
+                >
                     unfollow
                 </button>
+                }
+                
+                
             </div>
             </div>
              <div className="gallery">
