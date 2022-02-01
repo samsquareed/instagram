@@ -27,8 +27,8 @@ const UserProfile = () =>{
                 email : response.data.user.email,
                 posts : response.data.posts.length,
                 images : response.data.posts,
-                followers : response.data.user.followers.length,
-                following : response.data.user.following.length
+                followers : response.data.user.followers,
+                following : response.data.user.following
             }
             setUserProfile(userData)
             // console.log(userProfile);
@@ -53,6 +53,12 @@ const UserProfile = () =>{
                 following : response.data.following
             }})
             localStorage.setItem("user", JSON.stringify(response.data))
+            setUserProfile((prevState)=>{
+                return{
+                    ...prevState,
+                   followers : [...prevState.followers, response.data._id]
+                }
+            })
         })
     }
 
@@ -92,8 +98,8 @@ const UserProfile = () =>{
                 <h5>{userProfile.email}</h5>
                 <div style={{display:"flex",justifyContent:"space-between",width:"108%"}}>
                     <h6>{userProfile.posts} posts</h6>
-                    <h6>{userProfile.followers} followers</h6>
-                    <h6>{userProfile.following} following</h6>
+                    <h6>{userProfile.followers.length} followers</h6>
+                    <h6>{userProfile.following.length} following</h6>
                 </div>
                 <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
                     onClick={handleFollow}
