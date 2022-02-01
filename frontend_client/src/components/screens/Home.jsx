@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import {Link} from 'react-router-dom'
 import {UserContext} from '../../App'
-import img from '../assets/images/deekshi.jpg'
+import img from '../assets/images/sam.jpg'
 import Axios from 'axios'
 import M from 'materialize-css'
 
