@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import {UserContext} from '../../App'
 import img from '../assets/images/deekshi.jpg'
 import Axios from 'axios'
+import M from 'materialize-css'
 
 const Home = () =>{
 
@@ -106,13 +107,36 @@ const Home = () =>{
         })
     }
 
+
+    const handleDelete = (postId)=>{
+        console.log(postId);
+        const authAxios = Axios.create({
+            baseURL : 'http://localhost:3001',
+            headers :{
+                Authorization : `Bearer ${localStorage.getItem("jwt")}`
+            }
+        });
+        authAxios.delete(`/delete/${postId}`)
+        .then(response=>{
+            if(response.data.message){
+                M.toast({html:"Deleted post Successfully",classes:"#43a047 green darken-1"})
+            }
+        })
+
+    }
+
     return(
         <div className="home">
             {
                 data?.map((item)=>{
                     return(
                         <div className="card home-card" key={item._id}>
-                            <h5>{item.postedBy.name}</h5>
+                            <h5>{item.postedBy.name}
+                            <i className="material-icons" style={{float:"right"}} 
+                            onClick={()=>handleDelete(item._id)}
+                            >delete
+                            </i>
+                            </h5>
                             <div className="card-image">
                                 <img 
                                     src={item.photo} alt="" 
