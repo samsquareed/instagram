@@ -95,7 +95,7 @@ router.put('/comment', requireLogin,(req,res)=>{
         if(err)
             res.status(422).json({error:err})
         else{
-            console.log(result);
+            // console.log(result);
             res.json(result)
         }
             
@@ -104,7 +104,7 @@ router.put('/comment', requireLogin,(req,res)=>{
 
 
 router.delete('/delete/:postId', requireLogin, (req,res)=>{
-    console.log(req.params.postId);
+    // console.log(req.params.postId);
     // we are accessing via params bcz delete rount won't accept any body from client.
     // i am just assuming
     Post.findOne({_id : req.params.postId})
