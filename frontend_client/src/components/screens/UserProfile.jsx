@@ -6,12 +6,13 @@ import {useParams} from 'react-router-dom'
 
 const UserProfile = () =>{
 
-    const [showFollow, setShowFollow] = useState(true)
+    
     const [userProfile, setUserProfile] = useState(null);
     const {state, dispatch} = useContext(UserContext)
 
     const {userid} = useParams()
     // console.log(userid);
+    const [showFollow, setShowFollow] = useState( true)
 
     useEffect( async ()=>{
         const authAxios = await Axios.create({
@@ -32,10 +33,10 @@ const UserProfile = () =>{
                 following : response.data.user.following
             }
             setUserProfile(userData)
-            // console.log(userProfile);
+            // console.log(showFollow);
             // setMyData(response.data.mypost);
         })
-    },[])
+    },[showFollow])
 
 
     const handleFollow = async() =>{
@@ -90,6 +91,7 @@ const UserProfile = () =>{
                    followers : newList
                 }
             })
+            setShowFollow(true)
         })
     }
 

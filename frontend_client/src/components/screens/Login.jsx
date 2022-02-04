@@ -25,6 +25,7 @@ const Login = () =>{
                 // console.log(response);
                 localStorage.setItem("jwt", response.data.token)
                 localStorage.setItem("user", JSON.stringify(response.data.user))
+                console.log(response.data);
                 dispatch({type:"USER", payload : response.data.user})
                 M.toast({html: "login successful", classes:"#43a047 green darken-1"})
                 nevigate('/');
