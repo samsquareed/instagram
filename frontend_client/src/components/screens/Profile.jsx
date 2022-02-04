@@ -7,6 +7,8 @@ const Profile = () =>{
 
     const [myData, setMyData] = useState([]);
     const {state, dispatch} = useContext(UserContext)
+    const [image,setImage] = useState("")
+    const [url,setUrl] = useState("")
 
     useEffect(()=>{
         const authAxios = Axios.create({
@@ -22,6 +24,65 @@ const Profile = () =>{
         })
     },[])
 
+    useEffect(()=>{
+        if(image){
+            const data = new FormData()
+            data.append("file",image)
+            data.append("upload_preset","instagram")
+            data.append("cloud_name","samsquare")
+
+            fetch("https://api.cloudinary.com/v1_1/samsquare/image/upload",{
+            method:"post",
+            body:data
+        }).then(res=>res.json())
+        .then(data=>{
+            setUrl(data.url)
+            // localStorage.setItem("user",JSON.stringify({...state,pic:data.url}))
+            // dispatch({type:"UPDATEPIC",payload:data.url})
+            // window.location.reload()
+
+            const authAxios = Axios.create({
+                baseURL : 'http://localhost:3001',
+                headers : {
+                    Authorization : `Bearer ${localStorage.getItem("jwt")}`
+                }
+            });
+            authAxios.put('/updatepic',{
+            pic : data.url
+            }).then(res=>{
+                console.log(res);
+                localStorage.setItem("user", JSON.stringify({...state, pic : res.data.pic}))
+                dispatch({type : "UPDATEPIC", payload : res.data.pic})
+            })
+            .then(window.location.reload)
+            
+        })
+        
+        
+        }
+    },[image])
+
+    // const uploadToDb = () =>{
+    //     console.log(url);
+    //     const authAxios = Axios.create({
+    //         baseURL : 'http://localhost:3001',
+    //         headers : {
+    //             Authorization : `Bearer ${localStorage.getItem("jwt")}`
+    //         }
+    //     });
+    //     authAxios.put('/updatepic',{
+    //         pic : url
+    //     })
+    //     .then(res=>{
+    //         // console.log(res);
+    //     })
+    // }
+
+    const updateProfilePic = (file)=>{
+        setImage(file)
+        
+    }
+
     return(
         <div style={{maxWidth:"550px",margin:"0px auto"}}>
             <div style={{
@@ -34,6 +95,15 @@ const Profile = () =>{
                 <img style={{width:"160px",height:"160px",borderRadius:"80px"}}
                     src={state ? state.pic : "Loading"}
                 />
+                <div className="file-field input-field">
+                    <div className="btn #64b5f6 blue darken-1">
+                        <span>Update profile pic</span>
+                        <input type="file" onChange={(e)=>updateProfilePic(e.target.files[0])} />
+                    </div>
+                    <div className="file-path-wrapper">
+                        <input className="file-path validate" type="text" />
+                    </div>
+                </div>
             </div>
             <div>
                 <h4> {state? state.name : "Loading ..."} </h4>
