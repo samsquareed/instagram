@@ -19,7 +19,7 @@ router.get('/protected', requireLogin, (req,res)=>{
 
 router.post('/signup', (req,res)=>{
     // console.log(req.body.name);
-    const { name, email, password} = req.body
+    const { name, email, password, pic} = req.body
     if(!email || !name || !password)
         return res.json({error : "Please provide all the credentials"})
     // res.json({message : "successfully registered"})
@@ -33,7 +33,8 @@ router.post('/signup', (req,res)=>{
             const user = new User({
                 email,
                 password:hashedPassword,
-                name
+                name,
+                pic
             })
             user.save()
             .then(user=>{
@@ -64,8 +65,8 @@ router.post('/signin',(req,res)=>{
             if(matched){
                 // return res.status(200).json({message : "signed successfully"})
                 const token = jwt.sign({_id : savedUser._id}, JWT_SECRET);
-                const {_id, name, email, followers, following} = savedUser;
-                res.json({token, user :{_id, name, email,followers, following}}); 
+                const {_id, name, email, followers, following, pic} = savedUser;
+                res.json({token, user :{_id, name, email,followers, following,pic}}); 
             }
             else{
                 // res.status(422).json({error : "Invalid credentials"})

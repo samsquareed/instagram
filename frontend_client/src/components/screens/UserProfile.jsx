@@ -12,7 +12,7 @@ const UserProfile = () =>{
 
     const {userid} = useParams()
     // console.log(userid);
-    const [showFollow, setShowFollow] = useState( true)
+    const [showFollow, setShowFollow] = useState( true) //state? !state.following.includes(userid) : true
 
     useEffect( async ()=>{
         const authAxios = await Axios.create({
@@ -30,7 +30,8 @@ const UserProfile = () =>{
                 posts : response.data.posts.length,
                 images : response.data.posts,
                 followers : response.data.user.followers,
-                following : response.data.user.following
+                following : response.data.user.following,
+                pic : response.data.user.pic
             }
             setUserProfile(userData)
             // console.log(showFollow);
@@ -108,7 +109,7 @@ const UserProfile = () =>{
             }}>
             <div>
                 <img style={{width:"160px",height:"160px",borderRadius:"80px"}}
-                    src={img}
+                    src={userProfile.pic}
                 />
             </div>
             <div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {Link, useNavigate } from 'react-router-dom'
 import Axios from 'axios'
 import M from 'materialize-css'
@@ -10,10 +10,15 @@ const Signup = () =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [image, setImage] = useState("");
-    const [url,setUrl] = useState("");
+    const [url,setUrl] = useState(undefined);
 
+    useEffect(()=>{
+        if(url){
+            uploadFields()
+        }
+    },[url])
 
-    const ImagePost = ()=>{
+    const uploadProfilePic = ()=>{
         const data = new FormData()
         data.append("file",image)
         data.append("upload_preset","instagram")
@@ -27,15 +32,13 @@ const Signup = () =>{
        .catch(err=>console.log(err))
     }
 
-
-    const handleSignUp = (e) =>{
-        e.preventDefault();
+    const uploadFields = () =>{
         if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)){
             M.toast({html: "invalid email",classes:"#c62828 red darken-3"})
             return
         }
         // console.log(name, email, password);
-        Axios.post('http://localhost:3001/signup',{name,email,password})
+        Axios.post('http://localhost:3001/signup',{name,email,password,pic:url})
         .then(response=> {
             // console.log(response)
             if(response.data.message){
@@ -46,6 +49,17 @@ const Signup = () =>{
                 M.toast({html: response.data.error,classes:"#c62828 red darken-3"})
             }
         }).catch(err=>console.log(err))
+    }
+
+
+    const handleSignUp = (e) =>{
+        e.preventDefault();
+
+        if(image){
+            uploadProfilePic()
+        } else{
+            uploadFields()
+        }
     }
 
     return(
