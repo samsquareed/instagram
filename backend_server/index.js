@@ -5,6 +5,9 @@ const PORT = 3001;
 const cors = require('cors');
 app.use(cors());
 
+const dotenv = require('dotenv')
+dotenv.config()
+
 const mongoose = require('mongoose')
 // const {MONGOURI} =require('./keys')
 require('dotenv').config();
